@@ -33,8 +33,10 @@ export default class Store {
         try {
             const response = await AuthService.login(email, password);
             this.setAuthData(response.data)
-        } catch (e) {
-            console.log(e.response?.data?.message)
+        } catch (e: unknown) {
+            if (axios.isAxiosError(e)) {
+                console.log(e.response?.data?.message)
+            }
         }
     }
 
@@ -42,8 +44,10 @@ export default class Store {
         try {
             const response = await AuthService.registration(email, password);
             this.setAuthData(response.data)
-        } catch (e) {
-            console.log(e.response?.data?.message)
+        } catch (e: unknown) {
+            if (axios.isAxiosError(e)) {
+                console.log(e.response?.data?.message)
+            }
         }
     }
 
@@ -53,8 +57,10 @@ export default class Store {
             localStorage.removeItem('token');
             this.setIsAuth(false);
             this.setUser({} as IUser)
-        } catch (e) {
-            console.log(e.response?.data?.message)
+        } catch (e: unknown) {
+            if (axios.isAxiosError(e)) {
+                console.log(e.response?.data?.message)
+            }
         }
     }
 
@@ -62,8 +68,10 @@ export default class Store {
         try {
             const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials: true})
             this.setAuthData(response.data)
-        } catch (e) {
-            console.log(e.response?.data?.message)
+        } catch (e: unknown) {
+            if (axios.isAxiosError(e)) {
+                console.log(e.response?.data?.message)
+            }
         }
     }
 }
