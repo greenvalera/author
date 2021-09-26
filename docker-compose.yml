@@ -29,4 +29,4 @@ services:
       context: ./client
     volumes:
       - /app/node_modules
-      - ./client:/app
+      - ./client:/home/node/app

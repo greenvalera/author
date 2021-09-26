@@ -4,6 +4,8 @@ import './App.css';
 import {StoreContext} from "./context";
 import AuthZone from "./components/AuthZone";
 import GuestZone from "./components/GuestZone";
+import Navbar from "./components/Navbar";
+import {Layout} from "antd";
 
 function App() {
     const {store} = useContext(StoreContext)
@@ -22,9 +24,12 @@ function App() {
     }
 
   return (
-    <div className="App">
-        {store.isAuth ? <AuthZone /> : <GuestZone />}
-    </div>
+    <Layout>
+        <Navbar />
+        <Layout.Content>
+            {store.isAuth ? <AuthZone /> : <GuestZone />}
+        </Layout.Content>
+    </Layout>
   );
 }
 
