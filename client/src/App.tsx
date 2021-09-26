@@ -4,7 +4,7 @@ import './App.css';
 import {StoreContext} from "./context";
 import AuthZone from "./components/AuthZone";
 import GuestZone from "./components/GuestZone";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/header/Navbar";
 import {Layout} from "antd";
 
 function App() {
