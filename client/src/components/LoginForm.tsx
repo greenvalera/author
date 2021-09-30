@@ -1,28 +1,31 @@
-import React, {FC, useContext, useState} from 'react';
+import React, {FC, useContext} from 'react';
 import {observer} from "mobx-react-lite";
 import {StoreContext} from "../context";
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button } from 'antd';
 
 interface ILoginFormInput {
     email: string,
-    password: string
+    password: string,
+    passwordRepeat?: string
 }
 
-const LoginForm: FC = () => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+interface Props {
+    isRegister?: boolean
+}
+
+const LoginForm: FC<Props> = ({isRegister = false}) => {
     const {store} = useContext(StoreContext)
-
     const onFinish = ({email, password}: ILoginFormInput) => {
-      store.login(email, password);
+        if (isRegister) {
+            store.registration(email, password);
+        } else {
+            store.login(email, password);
+        }
     }
-
-    const onRegisterClick = () => store.registration(email, password)
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
-
 
     return (
         <Form
@@ -39,45 +42,49 @@ const LoginForm: FC = () => {
                 name="email"
                 rules={[{ required: true, message: 'Please input your username!' }]}
             >
-                <Input
-                    // value={email}
-                    // onChange={(e) => setEmail(e.target.value)}
-                />
+                <Input />
             </Form.Item>
 
             <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
+                hasFeedback
+                rules={[{ required: true, message: 'Please confirm your password!' }]}
             >
-                <Input.Password
-                    // value={password}
-                    // onChange={(e) => setPassword(e.target.value)}
-                />
+                <Input.Password />
             </Form.Item>
+
+            {isRegister &&
+                <Form.Item
+                  label="Password repeat"
+                  name="passwordRepeat"
+                  hasFeedback
+                  rules={[
+                      {required: true, message: 'Please input your password!'},
+                      ({getFieldValue}) => ({
+                          validator(_, value) {
+                              if (!value || getFieldValue('password') === value) {
+                                  return Promise.resolve();
+                              }
+
+                              return Promise.reject(new Error('The two passwords that you entered do not match!'))
+                          }
+                      })
+                  ]}
+                >
+                  <Input.Password/>
+                </Form.Item>
+            }
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button type="primary" htmlType="submit">
-                    Login
+                    {isRegister ? 'SignUp' : 'Login'}
+                </Button>
+                <Button type="link" htmlType="button" onClick={() => {}}>
+                    {isRegister ? 'Do yuo have account already? SingIn!' : 'Create account'}
                 </Button>
             </Form.Item>
         </Form>
-        // <div>
-        //     <input
-        //         type="text"
-        //         placeholder="Email"
-        //         value={email}
-        //         onChange={e => setEmail(e.target.value)}
-        //     />
-        //     <input
-        //         type="text"
-        //         placeholder="Password"
-        //         value={password}
-        //         onChange={e => setPassword(e.target.value)}
-        //     />
-        //     <button onClick={onLoginClick}>Login</button>
-        //     <button onClick={onRegisterClick}>Registration</button>
-        // </div>
     );
 };
 
