@@ -1,15 +1,20 @@
-import React, {FC, useContext} from 'react';
+import React, {FC} from 'react';
 import {Menu} from "antd";
-import {StoreContext} from "../../context";
 import {SettingFilled} from "@ant-design/icons";
+import {logout} from '../../store/authSlice';
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store";
 
 const AuthBlock: FC = () => {
-    const {store} = useContext(StoreContext);
+    const isAuth = useSelector((state: RootState) => state.auth.isAuth);
+    const user = useSelector((state: RootState) => state.auth.user);
+    const dispatch = useDispatch();
+
     const ProfileSubmenu = () => {
       return (
-          <Menu.SubMenu key="SubMenu" icon={<SettingFilled />} title="Username">
+          <Menu.SubMenu key="SubMenu" icon={<SettingFilled />} title={user.email}>
               <Menu.Item>Account</Menu.Item>
-              <Menu.Item onClick={() => store.logout()}>Logout</Menu.Item>
+              <Menu.Item onClick={() => dispatch(logout())}>Logout</Menu.Item>
           </Menu.SubMenu>
 
       )
@@ -21,9 +26,9 @@ const AuthBlock: FC = () => {
             mode="horizontal"
             selectable={false}
         >
-            {!store.isAuth
-                ? <Menu.Item>Login</Menu.Item>
-                : <ProfileSubmenu />
+            {isAuth
+                ? <ProfileSubmenu />
+                : <Menu.Item>Login</Menu.Item>
             }
         </Menu>
     );

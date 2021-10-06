@@ -1,12 +1,14 @@
 import React, {FC, Fragment} from "react";
-import {useStoreContext} from "../context";
+import {useSelector} from "react-redux";
+import {RootState} from "../store";
 
 const UserInfo: FC = () => {
-    const {store} = useStoreContext();
+    const isAuth = useSelector((state: RootState) => state.auth.isAuth);
+    const user = useSelector((state: RootState) => state.auth.user)
     return (
         <Fragment>
-            <h1>{store.isAuth ? `User is authorized with email ${store.user.email}` : `User not authorized`}</h1>
-            {!store.user.isActivated ? <h1>Confirm your email!</h1> : null}
+            <h1>{isAuth ? `User is authorized with email ${user.email}` : `User not authorized`}</h1>
+            {!user.isActivated ? <h1>Confirm your email!</h1> : null}
         </Fragment>
     )
 }

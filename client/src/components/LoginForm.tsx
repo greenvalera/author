@@ -1,7 +1,8 @@
-import React, {FC, useContext} from 'react';
-import {observer} from "mobx-react-lite";
-import {StoreContext} from "../context";
+import React, {FC} from 'react';
+import {useDispatch} from "react-redux";
 import { Form, Input, Button } from 'antd';
+import {registration, login} from '../store/authSlice';
+import {useHistory} from "react-router-dom";
 
 interface ILoginFormInput {
     email: string,
@@ -14,12 +15,15 @@ interface Props {
 }
 
 const LoginForm: FC<Props> = ({isRegister = false}) => {
-    const {store} = useContext(StoreContext)
+    console.log(isRegister);
+    const dispatch = useDispatch();
+    const history = useHistory();
+
     const onFinish = ({email, password}: ILoginFormInput) => {
         if (isRegister) {
-            store.registration(email, password);
+            dispatch(registration({email, password}));
         } else {
-            store.login(email, password);
+            dispatch(login({email, password}));
         }
     }
 
@@ -80,7 +84,7 @@ const LoginForm: FC<Props> = ({isRegister = false}) => {
                 <Button type="primary" htmlType="submit">
                     {isRegister ? 'SignUp' : 'Login'}
                 </Button>
-                <Button type="link" htmlType="button" onClick={() => {}}>
+                <Button type="link" htmlType="button" onClick={() => {history.push('/signUp')}}>
                     {isRegister ? 'Do yuo have account already? SingIn!' : 'Create account'}
                 </Button>
             </Form.Item>
@@ -88,4 +92,4 @@ const LoginForm: FC<Props> = ({isRegister = false}) => {
     );
 };
 
-export default observer(LoginForm);
+export default LoginForm;
