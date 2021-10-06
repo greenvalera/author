@@ -1,11 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
+import {Layout} from "antd";
+import {
+    BrowserRouter,
+    Switch,
+    Route,
+    Redirect
+} from "react-router-dom";
 import './App.css';
 import {StoreContext} from "./context";
-import AuthZone from "./components/AuthZone";
-import GuestZone from "./components/GuestZone";
+import AuthZone from "./components/layout/AuthZone";
+import GuestZone from "./components/layout/GuestZone";
 import Navbar from "./components/header/Navbar";
-import {Layout} from "antd";
+import {IRoute, privateRoutes, publicRoutes} from "./router/routes";
 
 function App() {
     const {store} = useContext(StoreContext)
@@ -23,13 +30,30 @@ function App() {
         return (<div>Loading</div>)
     }
 
+    const routesList: IRoute[] = store.isAuth ? privateRoutes : publicRoutes;
+    const redirectRoute: string = store.isAuth ? '/' : '/login';
+    const Zone = store.isAuth ? AuthZone : GuestZone;
+
   return (
-    <Layout>
-        <Navbar />
-        <Layout.Content>
-            {store.isAuth ? <AuthZone /> : <GuestZone />}
-        </Layout.Content>
-    </Layout>
+      <BrowserRouter>
+          <Layout>
+              <Navbar />
+              <Layout.Content>
+                  <Zone>
+                      <Switch>
+                          {routesList.map(route => (
+                              <Route
+                                  key={route.path}
+                                  component={route.component}
+
+                              />
+                          ))}
+                          <Redirect to={{pathname: redirectRoute}}/>
+                      </Switch>
+                  </Zone>
+              </Layout.Content>
+          </Layout>
+      </BrowserRouter>
   );
 }
 
