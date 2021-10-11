@@ -46,13 +46,14 @@ function App() {
               <Layout.Content>
                   <Zone>
                       <Switch>
-                          {routesList.map(route => (
+                          {routesList.map(route =>
                               <Route
                                   key={route.path}
+                                  path={route.path}
                                   component={route.component}
                                   exact={route.exact}
                               />
-                          ))}
+                          )}
                           <Redirect to={{pathname: redirectRoute}}/>
                       </Switch>
                   </Zone>

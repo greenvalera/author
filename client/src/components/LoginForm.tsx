@@ -15,9 +15,9 @@ interface Props {
 }
 
 const LoginForm: FC<Props> = ({isRegister = false}) => {
-    console.log(isRegister);
     const dispatch = useDispatch();
     const history = useHistory();
+    const switcherPath = isRegister ? '/login' : '/signUp';
 
     const onFinish = ({email, password}: ILoginFormInput) => {
         if (isRegister) {
@@ -84,7 +84,7 @@ const LoginForm: FC<Props> = ({isRegister = false}) => {
                 <Button type="primary" htmlType="submit">
                     {isRegister ? 'SignUp' : 'Login'}
                 </Button>
-                <Button type="link" htmlType="button" onClick={() => {history.push('/signUp')}}>
+                <Button type="link" htmlType="button" onClick={() => {history.push(switcherPath)}}>
                     {isRegister ? 'Do yuo have account already? SingIn!' : 'Create account'}
                 </Button>
             </Form.Item>
