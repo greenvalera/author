@@ -1,8 +1,11 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, HttpStatus, Post, UseGuards} from '@nestjs/common';
 import {UsersService} from "./users.service";
 import {CreateUserDto} from "./dto/createUserDto";
 import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {User} from "./user.entity";
+import {Roles} from "../auth/roles-auth.decorator";
+import {RolesGuard} from "../auth/roles.guard";
+import {AddRoleDto} from "./dto/addRoleDto";
 
 @ApiTags('Пользователи')
 @Controller('/users')
@@ -13,6 +16,8 @@ export class UsersController {
 
     @ApiOperation({summary: 'Получение списка пользователей'})
     @ApiResponse({status: 200, type: [User]})
+    @Roles("ADMIN")
+    @UseGuards(RolesGuard)
     @Get('/')
     getAll() {
         return this.usersService.findAll();
@@ -29,5 +34,14 @@ export class UsersController {
                 throw new HttpException('USER_EXISTS', HttpStatus.BAD_REQUEST);
             }
         }
+    }
+
+    @ApiOperation({summary: 'Add role to user'})
+    @ApiResponse({status: 200, type: User})
+    //@Roles("ADMIN")
+    @UseGuards(RolesGuard)
+    @Post('/role')
+    async addRole(@Body() addRoleDto: AddRoleDto) {
+        return await this.usersService.addRole(addRoleDto);
     }
 }
