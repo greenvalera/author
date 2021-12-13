@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import {User} from "../users/user.entity";
 import {Role} from "../roles/role.entity";
 import {UserRoles} from "../roles/user-roles.entity";
+import {Item} from "../items/item.entity";
 
 export const databaseProviders = [
     {
@@ -15,7 +16,7 @@ export const databaseProviders = [
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
             });
-            sequelize.addModels([User, Role, UserRoles]);
+            sequelize.addModels([User, Role, UserRoles, Item]);
             await sequelize.sync();
             return sequelize;
         },
