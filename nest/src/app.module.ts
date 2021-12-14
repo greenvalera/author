@@ -6,7 +6,6 @@ import {ConfigModule} from "@nestjs/config";
 import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
 import { ItemsModule } from './items/items.module';
-import { PullModule } from './pull/pull.module';
 import { PoolsModule } from './pools/pools.module';
 
 @Module({
@@ -20,7 +19,6 @@ import { PoolsModule } from './pools/pools.module';
       AuthModule,
       RolesModule,
       ItemsModule,
-      PullModule,
       PoolsModule
   ],
 })

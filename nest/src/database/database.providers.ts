@@ -3,6 +3,7 @@ import {User} from "../users/user.entity";
 import {Role} from "../roles/role.entity";
 import {UserRoles} from "../roles/user-roles.entity";
 import {Item} from "../items/item.entity";
+import {Pool} from "../pools/pool.entity";
 
 export const databaseProviders = [
     {
@@ -16,7 +17,7 @@ export const databaseProviders = [
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
             });
-            sequelize.addModels([User, Role, UserRoles, Item]);
+            sequelize.addModels([User, Role, UserRoles, Item, Pool]);
             await sequelize.sync();
             return sequelize;
         },

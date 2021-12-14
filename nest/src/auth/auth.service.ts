@@ -1,11 +1,11 @@
 import * as bcrypt from 'bcryptjs'
-import {HttpException, HttpStatus, Injectable, UnauthorizedException} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, Scope, UnauthorizedException} from '@nestjs/common';
 import {CreateUserDto} from "../users/dto/createUserDto";
 import {UsersService} from "../users/users.service";
 import {JwtService} from "@nestjs/jwt";
 import {User} from "../users/user.entity";
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class AuthService {
 
     constructor(
