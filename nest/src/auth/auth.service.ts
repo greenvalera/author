@@ -10,7 +10,7 @@ export class AuthService {
 
     constructor(
       private userService: UsersService,
-      private jwtService: JwtService
+      private jwtService: JwtService,
     ) {}
 
     async login(userDto: CreateUserDto) {

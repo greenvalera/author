@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PoolsService } from './pools.service';
 import { PoolsController } from './pools.controller';
 import {poolsProviders} from "./pools.providers";
-import {AuthModule} from "../auth/auth.module";
+import {RequestModule} from "../request/request.module";
 
 @Module({
   providers: [
@@ -10,6 +10,6 @@ import {AuthModule} from "../auth/auth.module";
     ...poolsProviders
   ],
   controllers: [PoolsController],
-  imports: [AuthModule],
+  imports: [RequestModule],
 })
 export class PoolsModule {}

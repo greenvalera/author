@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
 import { ItemsModule } from './items/items.module';
 import { PoolsModule } from './pools/pools.module';
+import { RequestModule } from './request/request.module';
 
 @Module({
   controllers: [AppController],
@@ -19,7 +20,8 @@ import { PoolsModule } from './pools/pools.module';
       AuthModule,
       RolesModule,
       ItemsModule,
-      PoolsModule
+      PoolsModule,
+      RequestModule
   ],
 })
 export class AppModule {}
