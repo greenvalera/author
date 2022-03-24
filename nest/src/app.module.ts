@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -5,9 +6,10 @@ import { UsersModule } from './users/users.module';
 import {ConfigModule} from "@nestjs/config";
 import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
-import { ItemsModule } from './items/items.module';
-import { PoolsModule } from './pools/pools.module';
 import { RequestModule } from './request/request.module';
+import { PostsModule } from './posts/posts.module';
+import { FilesModule } from './files/files.module';
+import {ServeStaticModule} from "@nestjs/serve-static";
 
 @Module({
   controllers: [AppController],
@@ -16,12 +18,15 @@ import { RequestModule } from './request/request.module';
       ConfigModule.forRoot({
           envFilePath: `.${process.env.NODE_ENV}.env`
       }),
+      ServeStaticModule.forRoot({
+        rootPath: path.resolve(__dirname, 'static'),
+      }),
       UsersModule,
       AuthModule,
       RolesModule,
-      ItemsModule,
-      PoolsModule,
-      RequestModule
+      RequestModule,
+      PostsModule,
+      FilesModule
   ],
 })
 export class AppModule {}

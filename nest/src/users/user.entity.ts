@@ -2,7 +2,8 @@ import {BelongsToMany, Column, DataType, HasMany, Model, Table} from "sequelize-
 import {ApiProperty} from "@nestjs/swagger";
 import {UserRoles} from "../roles/user-roles.entity";
 import {Role} from "../roles/role.entity";
-import {Pool} from "../pools/pool.entity";
+import {Post} from "../posts/post.entity";
+
 
 interface UserCreationAttrs {
     email: string;
@@ -31,8 +32,8 @@ export class User extends Model<User, UserCreationAttrs> {
     roles: Role[];
 
     /**
-     * Not basic fields
+     * custom fields
      */
-    @HasMany(() => Pool)
-    pools: Pool[];
+    @HasMany(() => Post)
+    posts: Post[];
 }
