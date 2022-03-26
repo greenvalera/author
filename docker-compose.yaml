@@ -1,0 +1,35 @@
+version: '3.0'
+
+services:
+  nest:
+    container_name: nest
+    build:
+      context: ./nest
+    env_file:
+      - ./nest/.development.env
+    volumes:
+      - ./nest:/app
+      - /app/node_modules
+    ports:
+      - 5000:5000
+      - 9229:9229
+    command: npm run start:dev
+    depends_on:
+      - mysql
+    restart: always
+    links:
+      - mysql
+  mysql:
+    container_name: mysql
+    image: mysql:8.0.28-oracle
+    env_file:
+      - ./nest/.development.env
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+volumes:
+  mysql:
+    driver: local
