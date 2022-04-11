@@ -4,6 +4,8 @@ import {CreateUserDto} from "../users/dto/createUserDto";
 import {UsersService} from "../users/users.service";
 import {JwtService} from "@nestjs/jwt";
 import {User} from "../users/user.entity";
+import {TokensService} from "../tokens/tokens.service";
+import {PublicUserData} from "./interfaces/interfaces";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthService {
@@ -11,11 +13,12 @@ export class AuthService {
     constructor(
       private userService: UsersService,
       private jwtService: JwtService,
+      private tokenService: TokensService,
     ) {}
 
     async login(userDto: CreateUserDto) {
         const user = await this.validateUser(userDto.email, userDto.password);
-        return this.generateToken(user);
+        return await this.getUserData(user);
     }
 
     async registration(userDto: CreateUserDto) {
@@ -31,14 +34,15 @@ export class AuthService {
             password: hashPassword
         });
 
-        return this.generateToken(user);
+        return await this.getUserData(user);
     }
 
-    private generateToken({id, email, roles}: User) {
-        const payload = {id, email, roles};
-        return {
-            token: this.jwtService.sign(payload)
-        };
+    async refresh(refreshToken) {
+        const token = await this.tokenService.findByRefreshToken(refreshToken);
+        if (!token) {
+            throw new HttpException('TOKEN_NOT_FOUND', HttpStatus.FORBIDDEN);
+        }
+        return  this.getUserData(token.user);
     }
 
     async validateUser(email: string, password: string): Promise<User> {
@@ -49,5 +53,11 @@ export class AuthService {
         }
 
         throw new UnauthorizedException({message: "Incorrect email or password"});
+    }
+    async getUserData(user: User): Promise<PublicUserData> {
+        const userDto = this.userService.getUserDto(user);
+        const tokens = this.tokenService.generateTokens({...userDto});
+        await this.tokenService.saveRefreshToken({userId: userDto.id, refreshToken: tokens.refreshToken});
+        return {...tokens, userDto }
     }
 }

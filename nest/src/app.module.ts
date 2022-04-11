@@ -9,6 +9,7 @@ import { RolesModule } from './roles/roles.module';
 import { PostsModule } from './posts/posts.module';
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { TokensModule } from './tokens/tokens.module';
 
 @Module({
   controllers: [AppController],
@@ -24,7 +25,8 @@ import { ServeStaticModule } from "@nestjs/serve-static";
       AuthModule,
       RolesModule,
       PostsModule,
-      FilesModule
+      FilesModule,
+      TokensModule
   ],
 })
 export class AppModule {}

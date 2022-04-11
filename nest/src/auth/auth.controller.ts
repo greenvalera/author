@@ -1,21 +1,68 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, Post, Req, Res} from '@nestjs/common';
+import {Request, Response} from "express";
 import {ApiTags} from "@nestjs/swagger";
 import {CreateUserDto} from "../users/dto/createUserDto";
 import {AuthService} from "./auth.service";
+import {Public} from "./public.decorator";
+import {TokensService} from "../tokens/tokens.service";
 
 @ApiTags('Авторизация')
 @Controller('auth')
 export class AuthController {
 
-    constructor(private authService: AuthService) {}
+    constructor(
+      private authService: AuthService,
+      private tokenService: TokensService
+    ) {}
 
     @Post('/login')
-    async login(@Body() user: CreateUserDto) {
-        return await this.authService.login(user);
+    @Public()
+    async login(
+      @Body() user: CreateUserDto,
+      @Res({ passthrough: true }) response: Response
+    ) {
+        const userData = await this.authService.login(user);
+        this.setCookie(response, userData.refreshToken);
+        return userData;
     }
 
+    @Public()
     @Post('/registration')
-    async registration(@Body() user: CreateUserDto) {
-        return await this.authService.registration(user);
+    async registration(
+      @Body() user: CreateUserDto,
+      @Res({ passthrough: true }) response: Response
+    ) {
+        const userData = await this.authService.registration(user);
+        this.setCookie(response, userData.refreshToken);
+        return userData;
+    }
+
+    @Post('/logout')
+    async logout(
+      @Req() request: Request,
+      @Res({ passthrough: true }) response: Response
+    ) {
+        const { refreshToken } = request.cookies;
+        const token = await this.tokenService.remove(refreshToken);
+        response.clearCookie('refreshToken');
+        return token;
+    }
+
+    @Public()
+    @Post('/refresh')
+    async refresh(
+      @Req() request: Request,
+      @Res({ passthrough: true }) response: Response
+    ) {
+        const { refreshToken } = request.cookies;
+        return await  this.authService.refresh(refreshToken);
+    }
+
+    private setCookie(response: Response, refreshToken: string): void {
+        response.cookie(
+          'refreshToken',
+          refreshToken,
+          {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true}
+        );
     }
 }
