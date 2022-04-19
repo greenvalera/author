@@ -2,7 +2,6 @@ import * as bcrypt from 'bcryptjs'
 import {HttpException, HttpStatus, Injectable, Scope, UnauthorizedException} from '@nestjs/common';
 import {CreateUserDto} from "../users/dto/createUserDto";
 import {UsersService} from "../users/users.service";
-import {JwtService} from "@nestjs/jwt";
 import {User} from "../users/user.entity";
 import {TokensService} from "../tokens/tokens.service";
 import {PublicUserData} from "./interfaces/interfaces";
@@ -12,7 +11,6 @@ export class AuthService {
 
     constructor(
       private userService: UsersService,
-      private jwtService: JwtService,
       private tokenService: TokensService,
     ) {}
 
@@ -55,6 +53,7 @@ export class AuthService {
         throw new UnauthorizedException({message: "Incorrect email or password"});
     }
     async getUserData(user: User): Promise<PublicUserData> {
+        console.log(user.roles);
         const userDto = this.userService.getUserDto(user);
         const tokens = this.tokenService.generateTokens({...userDto});
         await this.tokenService.saveRefreshToken({userId: userDto.id, refreshToken: tokens.refreshToken});

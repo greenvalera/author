@@ -1,6 +1,7 @@
 interface CreateUserAttrs {
   id: number;
   email: string;
+  roles: string[];
 }
 
 export class User {
@@ -11,5 +12,6 @@ export class User {
   constructor(user: CreateUserAttrs) {
     this.id = user.id;
     this.email = user.email;
+    this.roles = user.roles;
   }
 }

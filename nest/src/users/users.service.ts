@@ -4,6 +4,7 @@ import {CreateUserDto} from "./dto/createUserDto";
 import {RolesService} from "../roles/roles.service";
 import {AddRoleDto} from "./dto/addRoleDto";
 import {User as UserDto} from "./dto/user";
+import {Role} from "../roles/role.entity";
 
 @Injectable()
 export class UsersService {
@@ -44,6 +45,10 @@ export class UsersService {
     }
 
     public getUserDto(model: UserModel): UserDto {
-        return new UserDto(model);
+        const {id, email} = model;
+        const roles = model.roles.map((role: Role): string => role.value);
+        return new UserDto(
+          {id, email, roles}
+        );
     }
 }

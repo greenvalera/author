@@ -7,7 +7,6 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import {JwtAuthGuard} from "./jwt-auth.guard";
-import {JwtModule} from "@nestjs/jwt";
 import {TokensModule} from "../tokens/tokens.module";
 
 @Module({
@@ -25,16 +24,9 @@ import {TokensModule} from "../tokens/tokens.module";
     forwardRef(() => UsersModule),
     PassportModule,
     TokensModule,
-    JwtModule.register({
-      secret: process.env.PRIVATE_KEY || 'SECRET',
-      signOptions: {
-        expiresIn: '24h',
-      }
-    }),
   ],
   exports: [
     AuthService,
-    JwtModule
   ]
 })
 export class AuthModule {}
