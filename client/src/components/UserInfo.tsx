@@ -8,7 +8,6 @@ const UserInfo: FC = () => {
     return (
         <Fragment>
             <h1>{isAuth ? `User is authorized with email ${user.email}` : `User not authorized`}</h1>
-            {!user.isActivated ? <h1>Confirm your email!</h1> : null}
         </Fragment>
     )
 }

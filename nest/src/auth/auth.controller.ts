@@ -55,10 +55,12 @@ export class AuthController {
       @Res({ passthrough: true }) response: Response
     ) {
         const { refreshToken } = request.cookies;
-        return await  this.authService.refresh(refreshToken);
+        const userData = await this.authService.refresh(refreshToken);
+        AuthController.setCookie(response, userData.refreshToken);
+        return userData;
     }
 
-    private setCookie(response: Response, refreshToken: string): void {
+    private static setCookie(response: Response, refreshToken: string): void {
         response.cookie(
           'refreshToken',
           refreshToken,

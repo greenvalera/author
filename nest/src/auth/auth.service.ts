@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs'
-import {HttpException, HttpStatus, Injectable, Scope, UnauthorizedException} from '@nestjs/common';
+import {ForbiddenException, HttpException, HttpStatus, Injectable, Scope} from '@nestjs/common';
 import {CreateUserDto} from "../users/dto/createUserDto";
 import {UsersService} from "../users/users.service";
 import {User} from "../users/user.entity";
@@ -40,23 +40,31 @@ export class AuthService {
         if (!token) {
             throw new HttpException('TOKEN_NOT_FOUND', HttpStatus.FORBIDDEN);
         }
-        return  this.getUserData(token.user);
+        return  await this.getUserData(token.user);
     }
 
     async validateUser(email: string, password: string): Promise<User> {
         const user = await this.userService.findByEmail(email);
+
+        if (!user) {
+            AuthService.throwForbiddenException();
+        }
+
         const passwordEquals = await bcrypt.compare(password, user.password);
-        if (user && passwordEquals) {
+        if (passwordEquals) {
             return user;
         }
 
-        throw new UnauthorizedException({message: "Incorrect email or password"});
+        AuthService.throwForbiddenException();
     }
-    async getUserData(user: User): Promise<PublicUserData> {
-        console.log(user.roles);
-        const userDto = this.userService.getUserDto(user);
-        const tokens = this.tokenService.generateTokens({...userDto});
-        await this.tokenService.saveRefreshToken({userId: userDto.id, refreshToken: tokens.refreshToken});
-        return {...tokens, userDto }
+    async getUserData(userModel: User): Promise<PublicUserData> {
+        const user = this.userService.getUserDto(userModel);
+        const tokens = this.tokenService.generateTokens({...user});
+        await this.tokenService.saveRefreshToken({userId: user.id, refreshToken: tokens.refreshToken});
+        return {...tokens, user }
+    }
+
+    private static throwForbiddenException() {
+        throw new ForbiddenException({message: "Incorrect email or password"});
     }
 }

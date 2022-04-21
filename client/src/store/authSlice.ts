@@ -3,6 +3,7 @@ import {IUser} from "../models/IUser";
 import {AuthResponse} from "../models/response/AuthResponse";
 import AuthService from "../services/authService";
 import axios from "axios";
+import api from "../http";
 import {API_URL} from "../http";
 
 interface IAuthState {
@@ -81,7 +82,7 @@ export const logout = createAsyncThunk(
 export const checkAuth = createAsyncThunk(
     'auth/check',
     async (): Promise<AuthResponse> => {
-        const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials: true});
+        const response = await api.post<AuthResponse>(`${API_URL}/auth/refresh`, {}, {withCredentials: true});
         return response.data;
     }
 );

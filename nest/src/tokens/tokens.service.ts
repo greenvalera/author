@@ -4,6 +4,7 @@ import {Token} from "./token.entity";
 import {JwtService} from "@nestjs/jwt";
 import {User} from "../users/user.entity";
 import {Tokens} from "./interfaces/tokens";
+import {Role} from "../roles/role.entity";
 
 @Injectable()
 export class TokensService {
@@ -33,7 +34,10 @@ export class TokensService {
       {
         where: {refreshToken},
         include: [{
-          model: User
+          model: User,
+          include: [{
+            model: Role,
+          }],
         }]
       }
     );
