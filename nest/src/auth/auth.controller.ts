@@ -22,7 +22,7 @@ export class AuthController {
       @Res({ passthrough: true }) response: Response
     ) {
         const userData = await this.authService.login(user);
-        this.setCookie(response, userData.refreshToken);
+        AuthController.setCookie(response, userData.refreshToken);
         return userData;
     }
 
@@ -33,7 +33,7 @@ export class AuthController {
       @Res({ passthrough: true }) response: Response
     ) {
         const userData = await this.authService.registration(user);
-        this.setCookie(response, userData.refreshToken);
+        AuthController.setCookie(response, userData.refreshToken);
         return userData;
     }
 
