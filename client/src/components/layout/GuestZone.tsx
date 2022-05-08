@@ -1,12 +1,13 @@
 import React, {FC, ReactNode} from 'react';
-import {Layout, Row} from "antd";
+import CssBaseline from "@mui/material/CssBaseline";
+import {Container} from "@mui/material";
 
 const GuestZone: FC<ReactNode> = ({children}) => (
-    <Layout>
-        <Row justify={"center"} align={"middle"} className={"h100"}>
-            {children}
-        </Row>
-    </Layout>
+  <Container component="main" maxWidth="xs">
+    <CssBaseline />
+    {children}
+  </Container>
+
 );
 
 export default GuestZone;

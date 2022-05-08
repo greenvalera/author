@@ -1,7 +1,6 @@
 import {ComponentType} from "react";
 import Home from "../components/pages/Home";
-import LoginForm from "../components/LoginForm";
-import SignUp from "../components/pages/SignUp";
+import {SignIn, SignUp} from "../components/auth";
 
 export interface IRoute {
     path: string,
@@ -21,7 +20,7 @@ export const publicRoutes: IRoute[] = [
     {
         path: '/login',
         exact: true,
-        component: LoginForm,
+        component: SignIn,
     },
     {
         path: '/signUp',

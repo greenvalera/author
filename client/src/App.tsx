@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Layout} from "antd";
 import {
     BrowserRouter,
     Switch,
@@ -10,10 +9,13 @@ import {useDispatch, useSelector} from "react-redux";
 import './App.css';
 import AuthZone from "./components/layout/AuthZone";
 import GuestZone from "./components/layout/GuestZone";
-import Navbar from "./components/header/Navbar";
 import {IRoute, privateRoutes, publicRoutes} from "./router/routes";
 import {checkAuth} from "./store/authSlice";
 import {RootState} from "./store";
+import {ThemeProvider} from "@mui/material";
+import {createTheme} from "@mui/material/styles";
+
+const theme = createTheme();
 
 function App() {
     const [loading,  setLoading] = useState<boolean>(true);
@@ -40,9 +42,7 @@ function App() {
 
   return (
       <BrowserRouter>
-          <Layout>
-              <Navbar />
-              <Layout.Content>
+          <ThemeProvider theme={theme}>
                   <Zone>
                       <Switch>
                           {routesList.map(route =>
@@ -56,8 +56,7 @@ function App() {
                           <Redirect to={{pathname: redirectRoute}}/>
                       </Switch>
                   </Zone>
-              </Layout.Content>
-          </Layout>
+          </ThemeProvider>
       </BrowserRouter>
   );
 }
