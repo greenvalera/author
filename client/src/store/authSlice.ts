@@ -8,7 +8,8 @@ import {API_URL} from "../http";
 
 interface IAuthState {
     user: IUser,
-    isAuth: boolean
+    isAuth: boolean,
+    loading: boolean,
 }
 
 interface ILoginParams {
@@ -18,7 +19,8 @@ interface ILoginParams {
 
 const initialState: IAuthState = {
     user: {} as IUser,
-    isAuth: false
+    isAuth: false,
+    loading: true,
 };
 
 const setAuthData = (state: IAuthState, authData: AuthResponse | undefined): void => {
@@ -104,6 +106,7 @@ const authSlice = createSlice({
             })
             .addCase(checkAuth.fulfilled, (state, action) => {
                setAuthData(state, action.payload)
+               state.loading = false;
             });
     },
     reducers: {
@@ -116,9 +119,14 @@ const authSlice = createSlice({
         },
 
         setAuthData(state, action: PayloadAction<AuthResponse>) {
-            setAuthData(state, action.payload)
+            setAuthData(state, action.payload);
+        },
+        setLoading(state, action: PayloadAction<boolean>) {
+          state.loading = action.payload;
         }
     }
 });
+
+export const {setLoading} = authSlice.actions;
 
 export default authSlice.reducer;

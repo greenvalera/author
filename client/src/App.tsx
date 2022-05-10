@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
     BrowserRouter,
     Switch,
@@ -10,7 +10,7 @@ import './App.css';
 import AuthZone from "./components/layout/AuthZone";
 import GuestZone from "./components/layout/GuestZone";
 import {IRoute, privateRoutes, publicRoutes} from "./router/routes";
-import {checkAuth} from "./store/authSlice";
+import {checkAuth, setLoading} from "./store/authSlice";
 import {RootState} from "./store";
 import {ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
@@ -18,22 +18,21 @@ import {createTheme} from "@mui/material/styles";
 const theme = createTheme();
 
 function App() {
-    const [loading,  setLoading] = useState<boolean>(true);
     const dispatch = useDispatch();
     const isAuth = useSelector((state: RootState) => state.auth.isAuth);
+    const loading = useSelector((state: RootState) => state.auth.loading);
 
 
     useEffect(() => {
         if(localStorage.getItem('token')) {
             dispatch(checkAuth());
-            setLoading(false)
         } else {
-            setLoading(false)
+            dispatch(setLoading(false));
         }
-    }, [dispatch])
+    }, [])
 
     if(loading) {
-        return (<div>Loading</div>)
+        return (<div>Loading</div>);
     }
 
     const routesList: IRoute[] = isAuth ? privateRoutes : publicRoutes;
